@@ -1,0 +1,186 @@
+<?php
+session_start();
+ ?>
+<script>
+
+function notifyMe() {
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+  else if (Notification.permission === "granted") {
+        var options = {
+                body: "There is a new message in chatroom",
+                icon:"peep.png",
+                dir : "ltr"
+             };
+          var notification = new Notification("PEEPSTAKE Notification",options);
+  }
+  else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      if (!('permission' in Notification)) {
+        Notification.permission = permission;
+      }
+    
+      if (permission === "granted") {
+        var options = {
+              body: "There is a new message in chatroom",
+              icon: "peep.png",
+              dir : "ltr"
+          };
+        var notification = new Notification("PEEPSTAKE Notification",options);
+      }
+    });
+  }
+}
+
+	
+function getText() {
+		
+	var $a =	document.getElementById('text').value;
+	
+		xhr = new XMLHttpRequest();
+		xhr.open('POST' , 'chatdb.php',true);
+		xhr.setRequestHeader('content-type','application/x-www-form-urlencoded');
+		xhr.send('chat='+$a);
+		xhr.onreadystatechange=function(){
+			if (xhr.responseText){
+			//	document.getElementById('chatarea').innerHTML=xhr.responseText;
+									}
+				}
+					}
+		
+
+function setText(){
+	
+	xhr = new XMLHttpRequest();
+	xhr.open('POST' , 'chatFetch.php' , true);
+	xhr.setRequestHeader('content-type','application/x-www-form-urlencoded');
+	xhr.send();
+	xhr.onreadystatechange = function(){
+	//	alert(xhr.responseText);
+			document.getElementById('chatarea').innerHTML = xhr.responseText;
+			}
+		
+	}
+	setInterval("setText()",2000);
+	
+	
+setInterval("users()",3000);
+
+	
+	function users(){
+	xhr1 = new XMLHttpRequest();
+	xhr1.open('POST' , 'userFetch.php' , true);
+	xhr1.setRequestHeader('content-type','application/x-www-form-urlencoded');
+	xhr1.send();
+	xhr1.onreadystatechange = function(){
+	//	alert(xhr.responseText);
+			document.getElementById('loginperson').innerHTML = xhr1.responseText;
+			}
+		
+		
+		}
+		
+		
+</script>
+<?php
+
+include_once('config.php');
+				//	echo		$_SESSION['email'];
+				//	echo	$_SESSION['password'];
+
+			
+					
+					
+					
+						
+if (isset($_GET['logout'])){
+	$result = mysqli_query($conn, "UPDATE user
+SET user_status = '0'
+WHERE user_email = '$_SESSION[email]';");
+session_destroy();
+header('location: practice.php?logout_successfully=<span style="color:green">You have successfully Logged Out.</span>');
+	
+	}
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+   
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" type="text/css" href="css/csstemplate.css">
+<script type="text/javascript" src="js/temp.js"></script>
+</head>
+<body>
+<div class="window-wrapper">
+		<div class="window-title">
+			<div class="dots">
+				<i class="fa fa-circle"></i>
+				<i class="fa fa-circle"></i>
+				<i class="fa fa-circle"></i>
+			</div>
+			<div class="title">
+				<span style="font-size:15px;">PEEPSTAKE CHATROOM</span>
+				<form action=""><input type="button" value="LOGOUT" name="logout" class="send-btn" style="background-color:#505d71;float:right"></form>
+			</div>
+			
+		</div>
+		<div class="window-area">
+			<div class="conversation-list">
+				
+				
+			</div>
+			<div id="chatbox">
+			<div class="chat-area" id="chatarea">
+				<div class="title"><b><?php echo $_SESSION['name'];?></b></div>
+				<div class="chat-list">
+					
+				</div>
+				</div>
+				<div class="input-area">
+					<div class="input-wrapper">
+						<input type="text" value="">
+						
+					</div>
+					<form>
+                     <textarea rows="4" cols="100" id="text"></textarea>
+					<input type="button"  value="send"  onclick="getText();notifyMe()"class="send-btn" style="background-color:#505d71"></form>
+				</div>
+			</div>
+			<div class="right-tabs" id="loginperson">
+				<ul class="tabs">
+					<li class="active">
+						<a href="#"><i class="fa fa-users"></i></a>
+					</li>
+					
+				</ul>
+				<ul class="tabs-container">
+					<li class="active">
+						<ul class="member-list">
+							<li><span class="status online"><i class="fa fa-circle-o"></i></span><span>Cucu Ionel</span></li>
+							<li><span class="status online"><i class="fa fa-circle-o"></i></span><span>Christian Smith</span></li>
+							<li><span class="status idle"><i class="fa fa-circle-o"></i></span><span>John Bradley</span><span class="time"></span></li>
+							<li><span class="status offline"><i class="fa fa-circle-o"></i></span><span>Daniel Freitz</span></li>
+						</ul>
+					</li>
+					<li></li>
+					<li></li>
+				</ul>
+				
+			</div>
+		</div>
+	</div>
+	<?php
+	if(!isset($_SESSION['email']) && !isset($_SESSION['password'])){
+		//session_destroy();
+		header('location: practice.php');
+		}
+
+ ?>
+	</body>

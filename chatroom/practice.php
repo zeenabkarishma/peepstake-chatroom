@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Login & Sign Up Form Concept</title>
+  
+  
+  <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300'>
+<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+
+      <link rel="stylesheet" href="css/style.css">
+
+
+  
+</head>
+<script>
+function getcity(id) {
+      xhr = new XMLHttpRequest();
+      xhr.open('GET' , 'test.php?idd='+id, true);
+      xhr.send();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status==200){
+          document.getElementById("city_display").innerHTML = xhr.responseText;
+          }
+      
+        }
+
+
+}
+
+
+function getEmail(emailid){
+
+      email  = new XMLHttpRequest();
+      email.open('GET' , 'test2.php?email='+emailid, true);
+      email.send();
+      email.onreadystatechange = function(){
+        if (email.readyState == 4 && email.status == 200)
+        {
+          
+          document.getElementById('emailDiv').innerHTML = email.responseText;
+          }
+        
+        }
+  
+  
+  }
+  
+  
+  function password (pass){
+  var a = document.getElementById('pass1').value;
+  //  document.write(a);
+    var b = document.getElementById('pass2').value;
+    if (a == b ){
+      document.getElementById('cnfrmpass').innerHTML = "<font color='#00CC00'>Matched</font>";
+      }
+      else {
+        
+        document.getElementById('cnfrmpass').innerHTML = "<font color='red'>Miss matched</font>";
+        }
+    }
+
+</script>
+
+<?php
+include_once('config.php');
+$result = mysqli_query($conn , 'select * from country');
+if(!$result){
+  echo 'query failed';}
+?>
+
+
+<?php if( isset($_GET['logout_successfully'])){ ?><?php echo $_GET['logout_successfully']; ?>
+<?php } ?>
+
+<body>
+  <div class="cotn_principal">
+<div class="cont_centrar">
+
+  <div class="cont_login">
+<div class="cont_info_log_sign_up">
+      <div class="col_md_login">
+<div class="cont_ba_opcitiy">
+        
+        <h2>LOGIN</h2>  
+  <p>come join our community</p> 
+  <button class="btn_login" onclick="cambiar_login()">LOGIN</button>
+  </div>
+  </div>
+<div class="col_md_sign_up">
+<div class="cont_ba_opcitiy">
+  <h2>SIGN UP</h2>
+
+  
+  <p>JOIN US AND ENJOY!</p>
+
+  <button class="btn_sign_up" onclick="cambiar_sign_up()">SIGN UP</button>
+</div>
+  </div>
+       </div>
+
+    
+    <div class="cont_back_info">
+       <div class="cont_img_back_grey">
+       <img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
+       </div>
+       
+    </div>
+<div class="cont_forms" >
+    <div class="cont_img_back_">
+       <img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
+       </div>
+       <form  method="post" action="process.php">
+ <div class="cont_form_login">
+<a href="#" onclick="ocultar_login_sign_up()" ><i class="material-icons">&#xE5C4;</i></a>
+   <h2>LOGIN</h2>
+   <form  method="post" action="process.php">
+ <input type="text" placeholder="Email" name="email" />
+<input type="password" placeholder="Password" name="password" />
+<select>
+  <option value="employee">employee</option>
+  <option value="customer">customer</option>
+  </select><br>
+<button class="btn_login" onclick="cambiar_login()" name="loginbtn">LOGIN</button>
+</form>
+  </div>
+  <?php if( isset($_GET['login_error'])){ ?><?php echo $_GET['login_error']; ?>
+<?php } ?>
+  <form method="post" action="insert.php">
+   <div class="cont_form_sign_up">
+<a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
+     <h2>SIGN UP</h2>
+     <form method="post" action="insert.php">
+
+<input type="text" placeholder="Name" name="name" />
+<input type="text" placeholder="Email" name="email" onBlur="getEmail(this.value)"/>
+<input type="text" placeholder="allotted_ID" name="aid" />
+<input type="password" placeholder="Password" name="pass1" id="pass1"/>
+<button class="btn_sign_up" onclick="cambiar_sign_up()" name="sbt">SIGN UP</button>
+<?php if( isset($_GET['registeration_successfull'])){ ?><script type="text/javascript">alert("regsistration succseful");</script>
+<?php } ?>
+</form>
+
+  </div>
+
+    </div>
+    
+  </div>
+ </div>
+</div>
+  
+    <script  src="js/index.js"></script>
+
+</body>
+</html>
